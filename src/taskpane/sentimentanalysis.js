@@ -17,7 +17,7 @@ const { TextAnalyticsClient, AzureKeyCredential } = require("@azure/ai-text-anal
 
 // You will need to set these environment variables or edit the following values
 const endpoint = "https://openaiservice.cognitiveservices.azure.com/"; // process.env["ENDPOINT"] || "<cognitive services endpoint>";
-const apiKey = "94f266d5904b4e4f8a06fc271ee972d1"; // process.env["TEXT_ANALYTICS_API_KEY"] || "<api key>";
+const apiKey = ""; // Get your own API key
 
 const documents = [
   "Weather is ok today",
