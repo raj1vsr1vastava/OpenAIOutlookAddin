@@ -5,55 +5,48 @@
 
 /* global document, Office */
 
+import { sentimentanalysis } from "./sentimentanalysis.js";
+
 Office.onReady((info) => {
-  if (info.host === Office.HostType.Outlook) {
+  // if (info.host === Office.HostType.Outlook) {
     document.getElementById("sideload-msg").style.display = "none";
     document.getElementById("app-body").style.display = "flex";
     document.getElementById("run").onclick = run;
-  }
+  // }
 });
 
 export async function run() {
   // Get a reference to the current message
-  const item = Office.context.mailbox.item;
-  var emailBody = "";
+  // const item = Office.context.mailbox.item;
+  // var emailBody = "";
+  var result = "";
+  var overall_sentiment = "";
+  var confscore_positive = "";
+  var confscore_neutral = "";
+  var confscore_negative = "";
 
   // Write message property value to the task pane
-  document.getElementById("item-subject").innerHTML = "<b>Subject:</b> <br/>" + item.subject;
+  // document.getElementById("item-subject").innerHTML = "<b>Subject:</b> <br/>" + item.subject;
 
   // Get the Text body of the email
-  item.body.getAsync(Office.CoercionType.Text, function (asyncResult) {
-    emailBody = asyncResult.value;
-  });
+  // item.body.getAsync(Office.CoercionType.Text, function (asyncResult) {
+  //   emailBody = asyncResult.value;
+  // });
 
-  //TODO: call sentiment analysis APIs here
-  // const axios = require("axios");
+  //TODO call sentiment analysis function
+  result = await sentimentanalysis();
+  for (const { sentiment, confidenceScores, text } of result.sentences) {
+      // console.log(`\t- Sentence text: ${text}`);
+      // console.log(`\t  Sentence sentiment: ${sentiment}`);
+      // console.log("\t  Confidence scores:", confidenceScores);
+      const { positive, neutral, negative } = confidenceScores
+      confscore_positive = positive*100;
+      confscore_neutral = neutral*100;
+      confscore_negative = negative*100;
+    }
 
-  // async function sentimentAnalysis(text) {
-  //   const url = `https://${process.env.AZURE_REGION}.api.cognitive.microsoft.com/text/analytics/v3.0/sentiment`;
-
-  //   const data = {
-  //     documents: [
-  //       {
-  //         id: "1",
-  //         text: text,
-  //       },
-  //     ],
-  //   };
-
-  //   const headers = {
-  //     "Ocp-Apim-Subscription-Key": process.env.AZURE_API_KEY,
-  //   };
-
-  //   try {
-  //     const response = await axios.post(url, data, { headers });
-  //     return response.data.documents[0].score;
-  //   } catch (error) {
-  //     console.error(error);
-  //     return null;
-  //   }
-  // }
 
   //paste the sentiment on the add-in
-  document.getElementById("sentiment-analysis").innerHTML = emailBody;
+  document.getElementById("overall-sentiment").innerHTML = "The Overall Sentiment is <b>" + result.sentiment + "</b>";
+  document.getElementById("confidence-score").innerHTML = "<b>Confidence Score :</b> <br/>" + "Positive: "+confscore_positive + "%</br>  Neutral: " + confscore_neutral+ "%</br>  Negative: " + confscore_negative + "%";
 }
