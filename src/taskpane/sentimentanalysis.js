@@ -51,13 +51,5 @@ export async function sentimentanalysis() {
     } else {
       console.error(`  Error: ${result.error}`);
     }
-    // console.log(overall_sentiment)
-    // return overall_sentiment;
   }
 }
-
-// main().catch((err) => {
-// //   console.error("The sample encountered an error:", err);
-// });
-
-// module.exports = { main };
