@@ -17,21 +17,19 @@ const { TextAnalyticsClient, AzureKeyCredential } = require("@azure/ai-text-anal
 
 // You will need to set these environment variables or edit the following values
 const endpoint = "https://openaiservice.cognitiveservices.azure.com/"; // process.env["ENDPOINT"] || "<cognitive services endpoint>";
-const apiKey = ""; // Get your own API key
+const apiKey = ""; // Get yor own API key
 
 const documents = [
-  "Weather is ok today",
+  "This was win32 specifically, we haven’t stopped it fully.  We also are getting close to a good point for win32 to be usable (possibly) as a mvp but we aren’t sure if we will hit that goal or we will need to regroup the resources yet.  We originally had planned a M-L sized work item around enabled core SDX functionality and \
+   as of now haven’t de-prioritized it.NAA still takes priority over SDX and is 100% committed and full speed ahead still.",
 ];
 
 var overall_sentiment = "";
 var confidence_score = "";
 
-export async function sentimentanalysis() {
-
+export async function sentimentanalysis(text, callback) {
   const client = new TextAnalyticsClient(endpoint, new AzureKeyCredential(apiKey));
-
-  const results = await client.analyzeSentiment(documents);
-
+  const results =  await client.analyzeSentiment([text]);
 
   for (let i = 0; i < results.length; i++) {
     const result = results[i];
@@ -46,7 +44,7 @@ export async function sentimentanalysis() {
       //   console.log("\t  Confidence scores:", confidenceScores);
         
       // }
-      return result;
+      callback(result);
       
     } else {
       console.error(`  Error: ${result.error}`);
